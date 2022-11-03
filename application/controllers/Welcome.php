@@ -23,13 +23,12 @@ class Welcome extends CI_Controller {
 		$this->load->view('welcome_message');
 
 		$this->load->database();
-		$query = $this->db->query('SELECT * FROM mahasiswa');
+		$query = $this->db->query('SELECT pemilihan.kode_registrasi, mahasiswa.email FROM pemilihan INNER JOIN mahasiswa ON mahasiswa.id = pemilihan.id_mahasiswa;');
 
 		foreach ($query->result() as $row)
 		{
-				echo $row->nim;
-				echo $row->nama;
-				echo $row->angkatan;
+				echo $row->kode_registrasi;
+				echo ' ';
 				echo $row->email;
 				echo '<br>';
 		}
