@@ -6,36 +6,38 @@ class Login extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('Pemilihan_model');
-        $this->load->library('form_validation');
     }
 
 	public function index()
 	{
-        if ($_POST) {
-            $this->auth($_POST['kode_registrasi']);
-        } else {
+        $this->form_validation->set_rules('kode_registrasi', 'Kode Registrasi', 'required|exact_length[5]');
+        if ($this->form_validation->run() == FALSE) {
             $this->load->view('login');
+        } else {
+            $this->auth($_POST['kode_registrasi']);
         }
 	}
 
     private function auth($kode_registrasi) {
         if ($this->Pemilihan_model->auth($kode_registrasi) == KODE_REGISTRASI_UNAVAILABLE) {
-            echo 'kode tidak ditemukan';
+            $this->load->view('login', ['message' => 'Kode tidak ditemukan.']);
         }
 
         if ($this->Pemilihan_model->auth($kode_registrasi) == KODE_REGISTRASI_USED) {
-            echo 'anda telah memilih pada ' . $this->Pemilihan_model->get_profile($kode_registrasi)->memilih_pada;
-            echo '<pre>';
-            echo var_dump($this->Pemilihan_model->get_profile($kode_registrasi));
-            echo '</pre>';
+            $profil = $this->Pemilihan_model->get_profile($kode_registrasi);
+            $this->load->view('login', ['message' => $profil->nama . ', Anda telah memilih pada ' . $profil->memilih_pada]);
         }
 
         if ($this->Pemilihan_model->auth($kode_registrasi) == KODE_REGISTRASI_AVAILABLE) {
-            echo 'selamat datang ' . $this->Pemilihan_model->get_profile($kode_registrasi)->nama . ', silahkan memilih kandidat!';
-            echo '<pre>';
-            echo var_dump($this->Pemilihan_model->get_profile($kode_registrasi));
-            echo '</pre>';
+            $this->session->set_userdata((array) $this->Pemilihan_model->get_profile($kode_registrasi));
+            redirect('/pemilihan');
         }
+    }
+
         
+    public function logout()
+    {
+        $this->session->sess_destroy();
+        redirect('/pemilihan');
     }
 }

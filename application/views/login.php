@@ -14,11 +14,21 @@
             min-height: 100vh;
             margin: 0;
         }
+
+        .red {
+            color: red;
+        }
     </style>
 </head>
 <body>
+    <h1>PEMILIHAN CALON KETUA HIMA GAMETECH 2023</h1>
+    <div class="red">
+        <?php echo validation_errors(); ?>
+        <?php if (isset($message)) echo '<p>' . $message . '</p>' ?>
+    </div>
+    <?php echo form_open(''); ?>
     <form action="" method="post" name="login">
-        <input type="text" name="kode_registrasi" id="kode_registrasi" placeholder="masukkan kode registrasi" autocomplete="off">
+        <input type="text" name="kode_registrasi" id="kode_registrasi" value="<?php echo set_value('kode_registrasi'); ?>" placeholder="masukkan kode registrasi" autocomplete="off">
         <button type="submit">Submit</button>
     </form>
 </body>
