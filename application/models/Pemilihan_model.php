@@ -23,4 +23,16 @@ class Pemilihan_model extends CI_Model {
         $this->db->where('kode_registrasi', $kode_registrasi);
         return $this->db->get()->result()[0];
     }
+
+    public function coblos($kode_registrasi, $id_kandidat)
+    {
+        $data = [
+            'id_kandidat' => $id_kandidat,
+            'telah_memilih' => true,
+            'memilih_pada' => date(DATE_W3C, now('Asia/Jakarta'))
+        ];
+
+        $this->db->where('kode_registrasi', $kode_registrasi);
+        return $this->db->update($this->table, $data);
+    }
 }
